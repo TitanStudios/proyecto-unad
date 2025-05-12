@@ -1,0 +1,93 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2>Panel de Control</h2>
+        
+        <!-- Contenedor de botones -->
+        <div class="d-flex gap-2 mb-4">
+            <!-- Botón de escaneo OSINT -->
+            <form action="/scan" method="POST">
+                <button type="submit" class="btn btn-danger">Ejecutar Escaneo OSINT</button>
+            </form>
+            
+            <!-- Botón que activa el modal de confirmación -->
+            <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#confirmModal">
+                Limpiar Alertas
+            </button>
+        </div>
+
+        <!-- Modal de confirmación (debe estar en este nivel del DOM) -->
+        <div class="modal fade" id="confirmModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Confirmar acción</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        ¿Estás seguro de que deseas eliminar TODAS las alertas? Esta acción no se puede deshacer.
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <!-- Formulario de limpieza real -->
+                        <form id="realClearForm" action="/clear_alerts" method="POST">
+                            <button type="submit" class="btn btn-warning">Confirmar limpieza</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabla de alertas -->
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5>Alertas Recientes</h5>
+                <span class="badge bg-primary">{{ alerts|length }} alertas</span>
+            </div>
+            <div class="card-body">
+                {% if alerts %}
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Fuente</th>
+                            <th>Tipo de Dato</th>
+                            <th>Nivel de Riesgo</th>
+                            <th>Fecha</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for alert in alerts %}
+                        <tr>
+                            <td>{{ alert.source }}</td>
+                            <td>{{ alert.data_type }}</td>
+                            <td><span class="badge bg-{{ 'danger' if alert.risk_level == 'Alto' else 'warning' }}">{{ alert.risk_level }}</span></td>
+                            <td>{{ alert.date_detected }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <div class="alert alert-info">No hay alertas registradas. Ejecuta un escaneo para comenzar.</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript para manejar la confirmación -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Maneja el envío del formulario de limpieza
+    const clearForm = document.getElementById('realClearForm');
+    if (clearForm) {
+        clearForm.addEventListener('submit', function(e) {
+            if (!confirm('¿Estás absolutamente seguro de limpiar todas las alertas?')) {
+                e.preventDefault();
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

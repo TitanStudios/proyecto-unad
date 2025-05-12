@@ -1,0 +1,11 @@
+/proyecto-unad/
+│── app.py                # Backend (Flask)
+│── /templates/
+│   ├── index.html        # Página principal
+│   ├── dashboard.html    # Panel de control
+│   ├── alerts.html       # Alertas detectadas
+│   └── layout.html       # Plantilla base
+│── /static/
+│   ├── css/styles.css    # Estilos CSS
+│   └── js/scripts.js     # JavaScript (opcional)
+│── database.db           # Base de datos SQLite (se crea automáticamente)

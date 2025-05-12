@@ -1,0 +1,15 @@
+.hero-section {
+    background: linear-gradient(135deg, #6e48aa 0%, #9d50bb 100%);
+    color: white;
+    border-radius: 10px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+.navbar {
+    margin-bottom: 2rem;
+}
+
+.badge {
+    font-size: 0.9em;
+}
